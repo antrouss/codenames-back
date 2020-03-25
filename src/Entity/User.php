@@ -21,6 +21,11 @@ class User
      */
     private $username;
 
+    public function __construct(string $username)
+    {
+        $this->username = $username;
+    }
+
     public function getId(): ?int
     {
         return $this->id;

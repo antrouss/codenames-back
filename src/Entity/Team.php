@@ -28,6 +28,14 @@ class Team
      */
     private $users;
 
+    /**
+     * Helper property for number of cards that belong to the team
+     * on the board.
+     *
+     * @var int
+     */
+    private $number_of_cards;
+
     public function __construct()
     {
         $this->users = new ArrayCollection();
@@ -72,6 +80,18 @@ class Team
         if ($this->users->contains($user)) {
             $this->users->removeElement($user);
         }
+
+        return $this;
+    }
+
+    public function getNumberOfCards(): ?int
+    {
+        return $this->number_of_cards;
+    }
+
+    public function setNumberOfCards(int $number_of_cards)
+    {
+        $this->number_of_cards = $number_of_cards;
 
         return $this;
     }

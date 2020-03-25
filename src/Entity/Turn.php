@@ -9,6 +9,8 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Turn
 {
+    const STATUS_IN_PROGRESS = 1;
+    const STATUS_FINISHED = 2;
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()
@@ -36,6 +38,17 @@ class Turn
      * @ORM\Column(type="json")
      */
     private $pointed = [];
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Round", inversedBy="turns")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $round;
+
+    /**
+     * @ORM\Column(type="integer")
+     */
+    private $status = self::STATUS_IN_PROGRESS;
 
     public function getId(): ?int
     {
@@ -86,6 +99,30 @@ class Turn
     public function setPointed(array $pointed): self
     {
         $this->pointed = $pointed;
+
+        return $this;
+    }
+
+    public function getRound(): ?Round
+    {
+        return $this->round;
+    }
+
+    public function setRound(?Round $round): self
+    {
+        $this->round = $round;
+
+        return $this;
+    }
+
+    public function getStatus(): ?int
+    {
+        return $this->status;
+    }
+
+    public function setStatus(int $status): self
+    {
+        $this->status = $status;
 
         return $this;
     }

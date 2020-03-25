@@ -11,17 +11,15 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Game
 {
+    const STATUS_CREATED = 0;
+    const STATUS_IN_PROGRESS = 1;
+    const STATUS_FINISHED = 2;
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
      */
     private $id;
-
-    /**
-     * @ORM\ManyToMany(targetEntity="App\Entity\Team")
-     */
-    private $teams;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\User")
@@ -32,7 +30,7 @@ class Game
     /**
      * @ORM\Column(type="integer")
      */
-    private $number_of_rounds;
+    private $number_of_rounds = 0;
 
     /**
      * @ORM\OneToOne(targetEntity="App\Entity\Team", cascade={"persist", "remove"})
@@ -40,29 +38,26 @@ class Game
     private $winner;
 
     /**
-     * @ORM\Column(type="json", nullable=true)
-     */
-    private $map = [];
-
-    /**
-     * @ORM\Column(type="json", nullable=true)
-     */
-    private $words = [];
-
-    /**
-     * @ORM\Column(type="json", nullable=true)
-     */
-    private $progress = [];
-
-    /**
      * @ORM\Column(type="integer")
      */
-    private $status;
+    private $status = self::STATUS_CREATED;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Round", mappedBy="game", orphanRemoval=true)
      */
     private $rounds;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Team")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $team1;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Team")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $team2;
 
     public function __construct()
     {
@@ -73,32 +68,6 @@ class Game
     public function getId(): ?int
     {
         return $this->id;
-    }
-
-    /**
-     * @return Collection|Team[]
-     */
-    public function getTeams(): Collection
-    {
-        return $this->teams;
-    }
-
-    public function addTeam(Team $team): self
-    {
-        if (!$this->teams->contains($team)) {
-            $this->teams[] = $team;
-        }
-
-        return $this;
-    }
-
-    public function removeTeam(Team $team): self
-    {
-        if ($this->teams->contains($team)) {
-            $this->teams->removeElement($team);
-        }
-
-        return $this;
     }
 
     public function getHost(): ?User
@@ -133,42 +102,6 @@ class Game
     public function setWinner(?Team $winner): self
     {
         $this->winner = $winner;
-
-        return $this;
-    }
-
-    public function getMap(): ?array
-    {
-        return $this->map;
-    }
-
-    public function setMap(?array $map): self
-    {
-        $this->map = $map;
-
-        return $this;
-    }
-
-    public function getWords(): ?array
-    {
-        return $this->words;
-    }
-
-    public function setWords(?array $words): self
-    {
-        $this->words = $words;
-
-        return $this;
-    }
-
-    public function getProgress(): ?array
-    {
-        return $this->progress;
-    }
-
-    public function setProgress(?array $progress): self
-    {
-        $this->progress = $progress;
 
         return $this;
     }
@@ -212,6 +145,30 @@ class Game
                 $round->setGame(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getTeam1(): ?Team
+    {
+        return $this->team1;
+    }
+
+    public function setTeam1(?Team $team1): self
+    {
+        $this->team1 = $team1;
+
+        return $this;
+    }
+
+    public function getTeam2(): ?Team
+    {
+        return $this->team2;
+    }
+
+    public function setTeam2(?Team $team2): self
+    {
+        $this->team2 = $team2;
 
         return $this;
     }

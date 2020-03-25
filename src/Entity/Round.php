@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -9,6 +11,8 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Round
 {
+    const STATUS_IN_PROGRESS = 1;
+    const STATUS_FINISHED = 2;
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()
@@ -33,6 +37,46 @@ class Round
      * @ORM\JoinColumn(nullable=false)
      */
     private $spy_master_2;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Team")
+     */
+    private $starting_team;
+
+    /**
+     * @ORM\Column(type="json", nullable=true)
+     */
+    private $map = [];
+
+    /**
+     * @ORM\Column(type="json", nullable=true)
+     */
+    private $words = [];
+
+    /**
+     * @ORM\Column(type="json", nullable=true)
+     */
+    private $progress = [];
+
+    /**
+     * @ORM\OneToOne(targetEntity="App\Entity\Team", cascade={"persist", "remove"})
+     */
+    private $winner;
+
+    /**
+     * @ORM\Column(type="integer")
+     */
+    private $status = self::STATUS_IN_PROGRESS;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Turn", mappedBy="round", orphanRemoval=true)
+     */
+    private $turns;
+
+    public function __construct()
+    {
+        $this->turns = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -71,6 +115,109 @@ class Round
     public function setSpyMaster2(?User $spy_master_2): self
     {
         $this->spy_master_2 = $spy_master_2;
+
+        return $this;
+    }
+
+    public function getStartingTeam(): ?Team
+    {
+        return $this->starting_team;
+    }
+
+    public function setStartingTeam(?Team $starting_team): self
+    {
+        $this->starting_team = $starting_team;
+
+        return $this;
+    }
+
+    public function getMap(): ?array
+    {
+        return $this->map;
+    }
+
+    public function setMap(?array $map): self
+    {
+        $this->map = $map;
+
+        return $this;
+    }
+
+    public function getWords(): ?array
+    {
+        return $this->words;
+    }
+
+    public function setWords(?array $words): self
+    {
+        $this->words = $words;
+
+        return $this;
+    }
+
+    public function getProgress(): ?array
+    {
+        return $this->progress;
+    }
+
+    public function setProgress(?array $progress): self
+    {
+        $this->progress = $progress;
+
+        return $this;
+    }
+
+    public function getWinner(): ?Team
+    {
+        return $this->winner;
+    }
+
+    public function setWinner(?Team $winner): self
+    {
+        $this->winner = $winner;
+
+        return $this;
+    }
+
+    public function getStatus(): ?int
+    {
+        return $this->status;
+    }
+
+    public function setStatus(int $status): self
+    {
+        $this->status = $status;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Turn[]
+     */
+    public function getTurns(): Collection
+    {
+        return $this->turns;
+    }
+
+    public function addTurn(Turn $turn): self
+    {
+        if (!$this->turns->contains($turn)) {
+            $this->turns[] = $turn;
+            $turn->setRound($this);
+        }
+
+        return $this;
+    }
+
+    public function removeTurn(Turn $turn): self
+    {
+        if ($this->turns->contains($turn)) {
+            $this->turns->removeElement($turn);
+            // set the owning side to null (unless already changed)
+            if ($turn->getRound() === $this) {
+                $turn->setRound(null);
+            }
+        }
 
         return $this;
     }
