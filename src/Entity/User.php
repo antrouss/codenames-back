@@ -33,6 +33,11 @@ class User implements UserInterface
      */
     private $password;
 
+    public function __construct(string $username)
+    {
+        $this->username = $username;
+    }
+
     public function getId(): ?int
     {
         return $this->id;
