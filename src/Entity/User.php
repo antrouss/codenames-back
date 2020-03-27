@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation\Exclude;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
@@ -24,12 +25,14 @@ class User implements UserInterface
 
     /**
      * @ORM\Column(type="json")
+     * @Exclude
      */
     private $roles = [];
 
     /**
      * @var string The hashed password
      * @ORM\Column(type="string")
+     * @Exclude
      */
     private $password;
 

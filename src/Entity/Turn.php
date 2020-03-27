@@ -9,6 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Turn
 {
+    const STATUS_CREATED = 0;
     const STATUS_IN_PROGRESS = 1;
     const STATUS_FINISHED = 2;
     /**
@@ -25,12 +26,12 @@ class Turn
     private $spy_master;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $word;
 
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="integer", nullable=true)
      */
     private $number;
 

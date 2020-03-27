@@ -36,6 +36,11 @@ class Team
      */
     private $number_of_cards;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Game", inversedBy="teams")
+     */
+    private $game;
+
     public function __construct()
     {
         $this->users = new ArrayCollection();
@@ -92,6 +97,18 @@ class Team
     public function setNumberOfCards(int $number_of_cards)
     {
         $this->number_of_cards = $number_of_cards;
+
+        return $this;
+    }
+
+    public function getGame(): ?Game
+    {
+        return $this->game;
+    }
+
+    public function setGame(?Game $game): self
+    {
+        $this->game = $game;
 
         return $this;
     }

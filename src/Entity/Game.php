@@ -48,21 +48,14 @@ class Game
     private $rounds;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Team")
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\OneToMany(targetEntity="App\Entity\Team", mappedBy="game")
      */
-    private $team1;
-
-    /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Team")
-     * @ORM\JoinColumn(nullable=false)
-     */
-    private $team2;
+    private $teams;
 
     public function __construct()
     {
-        $this->teams = new ArrayCollection();
         $this->rounds = new ArrayCollection();
+        $this->teams = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -149,26 +142,33 @@ class Game
         return $this;
     }
 
-    public function getTeam1(): ?Team
+    /**
+     * @return Collection|Team[]
+     */
+    public function getTeams(): Collection
     {
-        return $this->team1;
+        return $this->teams;
     }
 
-    public function setTeam1(?Team $team1): self
+    public function addTeam(Team $team): self
     {
-        $this->team1 = $team1;
+        if (!$this->teams->contains($team)) {
+            $this->teams[] = $team;
+            $team->setGame($this);
+        }
 
         return $this;
     }
 
-    public function getTeam2(): ?Team
+    public function removeTeam(Team $team): self
     {
-        return $this->team2;
-    }
-
-    public function setTeam2(?Team $team2): self
-    {
-        $this->team2 = $team2;
+        if ($this->teams->contains($team)) {
+            $this->teams->removeElement($team);
+            // set the owning side to null (unless already changed)
+            if ($team->getGame() === $this) {
+                $team->setGame(null);
+            }
+        }
 
         return $this;
     }
