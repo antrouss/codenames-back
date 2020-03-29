@@ -1,0 +1,12 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "properties": {
+        "username": {
+            "$ref": "../definitions.json#/definitions/username"
+        },
+        "password": {
+            "$ref": "../definitions.json#/definitions/password"
+        }
+    }
+}
