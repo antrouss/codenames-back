@@ -10,4 +10,5 @@
 /.env
 /composer.lock
 /symfony.lock
+/.vscode
 ###< symfony/framework-bundle ###
