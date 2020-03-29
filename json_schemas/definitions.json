@@ -1,0 +1,21 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "definitions": {
+        "username": {
+            "type": "string",
+            "pattern": "^[A-Za-z]+[A-Za-z0-9_]*$",
+            "minLength": 3,
+            "maxLength": 25
+        },
+        "password": {
+            "type": "string"
+        },
+        "text": {
+            "type": "string"
+        },
+        "int_id": {
+            "type": "integer",
+            "minimum": 1
+        }
+    }
+}
