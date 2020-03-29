@@ -1,0 +1,273 @@
+openapi: 3.0.0
+info:
+  title: Codenames Api
+  description: An API for the application Codename
+  contact:
+    name: Antony Roussos
+    email: antrouss4@gmail.com
+  version: 0.0.1
+servers:
+  - url: http://api.codenames.local
+    description: Development
+paths:
+  /user/register:
+    post:
+      tags:
+        - user
+      summary: User registration.
+      description: .
+      operationId: register
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UserCredentials"
+      responses:
+        "200":
+          description: User is registered successfully.
+        "400":
+          description: Validation error
+        "409":
+          description: User with this username exists
+  /user/login:
+    post:
+      tags:
+        - user
+      summary: User login.
+      description: .
+      operationId: login
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UserCredentials"
+      responses:
+        "200":
+          description: User object.
+        "401":
+          description: Invalid credentials
+  /game:
+    post:
+      tags:
+        - game
+      summary: Create game.
+      description: .
+      operationId: create_game
+      responses:
+        "200":
+          description: Game object.
+  /game/{id}:
+    get:
+      tags:
+        - game
+      summary: Get game.
+      description: .
+      operationId: get_game
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+            example: 1
+          description: The id of the game.
+          required: true
+      responses:
+        "200":
+          description: Game object.
+        "404":
+          description: Game not found.
+  /team/join:
+    post:
+      tags:
+        - game
+      summary: Join team.
+      description: .
+      operationId: join_team
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              description: A json with the team id.
+              properties:
+                team:
+                  type: integer
+                  description: The team id
+                  example: 1
+      responses:
+        "200":
+          description: Team object.
+        "404":
+          description: Team not found.
+  /team/{id}:
+    put:
+      tags:
+        - game
+      summary: Edit Team (for now just rename).
+      description: .
+      operationId: edit_team
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+            example: 1
+          description: The id of the game.
+          required: true
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              description: A json with the team id.
+              properties:
+                team:
+                  type: integer
+                  description: The team id
+                  example: 1
+                name:
+                  type: string
+                  description: New team name
+                  example: Thundercats
+      responses:
+        "200":
+          description: Team object.
+        "404":
+          description: Team not found.
+        "400":
+          description: Validation error
+  /game/start:
+    post:
+      tags:
+        - game
+      summary: Start the game.
+      description: .
+      operationId: start_game
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              description: A json with the game id.
+              properties:
+                game:
+                  type: integer
+                  description: The game id
+                  example: 1
+      responses:
+        "200":
+          description: Game object.
+        "400":
+          description: Validation error
+        "404":
+          description: Game not found
+  /turn/{id}/evidence:
+    put:
+      tags:
+        - game
+      summary: Set evidence to help users guess.
+      description: .
+      operationId: add_evidence
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+            example: 1
+          description: The id of the turn.
+          required: true
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              description: A json with the game id.
+              properties:
+                word:
+                  type: string
+                  description: The word
+                  example: mountain
+                number:
+                  type: integer
+                  description: The number of the words describing
+                  example: 1
+      responses:
+        "200":
+          description: Game object.
+        "400":
+          description: Validation error
+        "404":
+          description: Game not found
+  /turn/{id}/guess:
+    post:
+      tags:
+        - game
+      summary: Guess a word.
+      description: .
+      operationId: add_guess
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+            example: 1
+          description: The id of the turn.
+          required: true
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              description: A json with comma separated coordinates.
+              properties:
+                guess:
+                  type: string
+                  description: Comma separated string with 2 values that are the coordinates on the board.
+                  example: 1,1
+      responses:
+        "200":
+          description: Game object.
+        "400":
+          description: Validation error
+        "404":
+          description: Game not found
+  /turn/{id}/finish:
+    post:
+      tags:
+        - game
+      summary: Finish turn.
+      description: .
+      operationId: finish_turn
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+            example: 1
+          description: The id of the turn.
+          required: true
+      responses:
+        "200":
+          description: Game object.
+        "400":
+          description: Validation error
+        "404":
+          description: Turn not found
+components:
+  schemas:
+    Username:
+      type: string
+      description: This is used as the unique attribute for a user.
+      example: "admin"
+    Password:
+      type: string
+      description: This is the value to authorize a user.
+      example: "!Q2w3e$R"
+    UserCredentials:
+      type: object
+      description: Username and password credentials to login.
+      properties:
+        username:
+          $ref: "#/components/schemas/Username"
+        password:
+          $ref: "#/components/schemas/Password"
