@@ -4,6 +4,8 @@
 # Put parameters here that don't need to change on each machine where the app is deployed
 # https://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
 parameters:
+    project_dir: '%kernel.project_dir%'
+    json_schemas_dir: '%project_dir%/json_schemas'
 
 services:
     # default configuration for services in *this* file
