@@ -56,6 +56,16 @@ paths:
       responses:
         "200":
           description: Game object.
+  /games:
+    get:
+      tags:
+        - game
+      summary: Get available games.
+      description: .
+      operationId: get_available_games
+      responses:
+        "200":
+          description: Games array of objects.
   /game/{id}:
     get:
       tags:
