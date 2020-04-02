@@ -37,6 +37,21 @@ class GameController extends BaseController
     }
 
     /**
+     * Returns games that are created but not started yet.
+     *
+     * @param GameService $game_service
+     * 
+     * @return Response
+     * 
+     * @Route("/games", name="get_available_games", methods={"GET"})
+     */
+    public function getAvailableGames(GameService $game_service): Response
+    {
+        $result = $game_service->getAvailable();
+        return $this->respond($result);
+    }
+
+    /**
      * Endpoint to get a game object.
      *
      * @param GameService $game_service
