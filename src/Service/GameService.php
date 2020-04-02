@@ -111,6 +111,24 @@ class GameService extends BaseService
     }
 
     /**
+     * Returns available games
+     *
+     * @return array
+     */
+    public function getAvailable(): array
+    {
+        /**
+         * @var GameRepository
+         */
+        $game_repo = $this->doctrine->getRepository(Game::class);
+        $games = $game_repo->findBy(['status' => Game::STATUS_CREATED]);
+        return [
+            'code' => self::SUCCESS,
+            'data' => $games,
+        ];
+    }
+
+    /**
      * This method to make a user able to join a team.
      *
      * @param integer $team_id
