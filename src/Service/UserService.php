@@ -42,27 +42,24 @@ class UserService extends BaseService
     /**
      * Method used to register a new user.
      *
+     * @param string $email
      * @param string $username
      * @param string $password
      * 
      * @return array
      */
-    public function register(string $username, string $password): array
+    public function register(string $email, string $username, string $password): array
     {
-        /**
-         * @var UserRepository
-         */
-        $user_repo = $this->doctrine->getRepository(User::class);
-        $user = $user_repo->findOneBy(['username' => $username]);
-        if (!is_null($user)) {
-            return [
+        $errors = $this->validateUserExists($username, $email);
+        if (count($errors) > 0) {
+            $response_array = [
+                'data' => $errors,
                 'code' => self::CONFLICT_ERR,
-                'data' => [
-                    'message' => "This username is already used. Please use a different username.",
-                ],
             ];
+            return $response_array;
         }
         $user = new User($username);
+        $user->setEmail($email);
         $user->setPassword($this->encoder->encodePassword($user, $password));
         $this->doctrine->persist($user);
         $this->doctrine->flush();
@@ -71,5 +68,38 @@ class UserService extends BaseService
             'code' => self::SUCCESS,
             'data' => $user,
         ];
+    }
+
+    /**
+     * Function validateUserExists() checks if user exists.
+     *
+     * In this function we first check if a user with the specified username
+     * already exists or with the specified email and we return accordingly
+     * the feedback to caller.
+     *
+     * @param string $username the username for a user.
+     * @param string $email the email of a user.
+     * 
+     * @return array returns an array with errors for existing user.
+     */
+    private function validateUserExists(string $username, string $email)
+    {
+        $errors = [];
+        $user_repo = $this->doctrine->getRepository(User::class);
+        $already_user = $user_repo->findOneBy(["username" => $username]);
+        if ($already_user) {
+            $errors[] = [
+                'property_path' => "username",
+                "message" => "This username is already used",
+            ];
+        }
+        $already_user = $user_repo->findOneBy(["email" => $email]);
+        if ($already_user) {
+            $errors[] = [
+                'property_path' => "email",
+                "message" => "This email is already used",
+            ];
+        }
+        return $errors;
     }
 }
