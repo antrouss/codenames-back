@@ -282,7 +282,9 @@ components:
       description: Username and password credentials to login.
       properties:
         username:
-          $ref: "#/components/schemas/Username"
+          type: string
+          description: The username or email of the user.
+          example: "admin"
         password:
           $ref: "#/components/schemas/Password"
     RegisterData:

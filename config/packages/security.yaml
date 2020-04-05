@@ -7,9 +7,16 @@ security:
     providers:
         # used to reload user from session & other features (e.g. switch_user)
         app_user_provider:
+            chain:
+                providers: [username_based, email_based]
+        username_based:
             entity:
                 class: App\Entity\User
                 property: username
+        email_based:
+            entity:
+                class: App\Entity\User
+                property: email
     firewalls:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
