@@ -252,6 +252,7 @@ class BaseController extends AbstractController
             Constraint::CHECK_MODE_APPLY_DEFAULTS
         );
         $errors = $validator->getErrors();
+        $errors = array_unique($errors, SORT_REGULAR);
         if (count($errors) == 0) {
             return [
                 'code' => BaseService::SUCCESS,
