@@ -16,6 +16,11 @@
         "int_id": {
             "type": "integer",
             "minimum": 1
+        },
+        "email": {
+            "type": "string",
+            "format": "email",
+            "maxLength": 254
         }
     }
 }

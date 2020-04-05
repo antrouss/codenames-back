@@ -21,7 +21,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/UserCredentials"
+              $ref: "#/components/schemas/RegisterData"
       responses:
         "200":
           description: User is registered successfully.
@@ -269,6 +269,10 @@ components:
       type: string
       description: This is used as the unique attribute for a user.
       example: "admin"
+    Email:
+      type: string
+      description: The email of a user.
+      example: "test@test.com"
     Password:
       type: string
       description: This is the value to authorize a user.
@@ -279,5 +283,15 @@ components:
       properties:
         username:
           $ref: "#/components/schemas/Username"
+        password:
+          $ref: "#/components/schemas/Password"
+    RegisterData:
+      type: object
+      description: Username and password credentials to login.
+      properties:
+        username:
+          $ref: "#/components/schemas/Username"
+        email:
+          $ref: "#/components/schemas/Email"
         password:
           $ref: "#/components/schemas/Password"

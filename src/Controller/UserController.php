@@ -59,7 +59,7 @@ class UserController extends BaseController
         if ($result['code'] !== BaseService::SUCCESS) {
             return $this->respond($result);
         }
-        $result = $user_service->register($data->username, $data->password);
+        $result = $user_service->register($data->email, $data->username, $data->password);
         return $this->respond($result);
     }
 }

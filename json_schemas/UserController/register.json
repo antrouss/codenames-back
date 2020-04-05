@@ -7,6 +7,14 @@
         },
         "password": {
             "$ref": "../definitions.json#/definitions/password"
+        },
+        "email": {
+            "$ref": "../definitions.json#/definitions/email"
         }
-    }
+    },
+    "required": [
+        "username",
+        "password",
+        "email"
+    ]
 }
