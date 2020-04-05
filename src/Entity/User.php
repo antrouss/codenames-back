@@ -24,6 +24,12 @@ class User implements UserInterface
     private $username;
 
     /**
+     * @ORM\Column(type="string", length=255)
+     * @Exclude
+     */
+    private $email;
+
+    /**
      * @ORM\Column(type="json")
      * @Exclude
      */
@@ -112,5 +118,17 @@ class User implements UserInterface
     {
         // If you store any temporary, sensitive data on the user, clear it here
         // $this->plainPassword = null;
+    }
+
+    public function getEmail(): ?string
+    {
+        return $this->email;
+    }
+
+    public function setEmail(string $email): self
+    {
+        $this->email = $email;
+
+        return $this;
     }
 }
