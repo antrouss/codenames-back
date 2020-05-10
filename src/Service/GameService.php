@@ -31,11 +31,17 @@ class GameService extends BaseService
     private $doctrine;
 
     /**
+     * @var ZMQService
+     */
+    private $zmq_service;
+
+    /**
      * @param EntityManagerInterface $doctrine
      */
-    public function __construct(EntityManagerInterface $doctrine)
+    public function __construct(EntityManagerInterface $doctrine, ZMQService $zmq_service)
     {
         $this->doctrine = $doctrine;
+        $this->zmq_service = $zmq_service;
     }
 
     /**
@@ -63,6 +69,11 @@ class GameService extends BaseService
         $game->setStatus(Game::STATUS_CREATED);
         $this->doctrine->persist($game);
         $this->doctrine->flush();
+        $game_data = [
+            'game' => $game->getId(),
+            'status' => 'created',
+        ];
+        $this->zmq_service->send('searching', $game_data);
         return [
             'code' => self::SUCCESS,
             'data' => $game,
@@ -211,6 +222,11 @@ class GameService extends BaseService
         $game->setStatus(Game::STATUS_IN_PROGRESS);
         $this->doctrine->persist($game);
         $this->doctrine->flush();
+        $game_data = [
+            'game' => $game->getId(),
+            'status' => 'started',
+        ];
+        $this->zmq_service->send('searching', $game_data);
 
         return [
             'code' => self::SUCCESS,
