@@ -27,7 +27,7 @@ class GameController extends BaseController
      * 
      * @return Response
      * 
-     * @Route("/game", name="create_game", methods={"POST"})
+     * @Route("/games", name="create_game", methods={"POST"})
      */
     public function newGame(GameService $game_service): Response
     {
